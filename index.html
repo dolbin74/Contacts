@@ -3,114 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <title>Contacts</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
+      margin: 30px;
     }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
     table {
       border-collapse: collapse;
+      width: 400px;
       margin-top: 20px;
-      width: 600px;
     }
+
     th, td {
       border: 1px solid black;
       padding: 8px;
+      text-align: left;
     }
+
     th {
-      background-color: #eee;
+      background-color: #f0f0f0;
+    }
+
+    #lookupBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
+
 <body>
 
-<h1>Contacts</h1>
-<p>Enter your contacts when prompted. They will appear in the table below.</p>
+  <h1>Contacts Database</h1>
+  <p>Select a slot number to view the contact stored there.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Phone</th>
-    </tr>
-  </thead>
-  <tbody id="contactRows">
-  </tbody>
-</table>
+  <table>
+    <thead>
+      <tr>
+        <th>Slot #</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody id="contactRows">
+    </tbody>
+  </table>
 
-<script>
-  // Ask user how many contacts they want to enter
-  var howManyText = prompt("How many contacts would you like to enter?");
-  var howMany = parseInt(howManyText);
+  <button id="lookupBtn">Look Up a Contact</button>
 
-  // Arrays to store contact info
-  var names = [];
-  var emails = [];
-  var phones = [];
+  <script>
+    // Pre-filled contacts array
+    var contacts = ["Arnold", "Sly", "Dwayne", "Vin", "JCVD", "Steven"];
 
-  if (isNaN(howMany) || howMany <= 0) {
-    alert("You did not enter a valid number. No contacts will be added.");
-  } else {
-
+    // Display table rows
+    var tableBody = document.getElementById("contactRows");
     var i = 0;
-    while (i < howMany) {
+    while (i < contacts.length) {
+      var row = document.createElement("tr");
 
-      var name = prompt("Enter the name for contact #" + (i + 1));
-      if (name === "" || name === null) {
-        name = "(no name)";
-      }
+      var cellSlot = document.createElement("td");
+      cellSlot.textContent = i;
+      row.appendChild(cellSlot);
 
-      var email = prompt("Enter the email for contact #" + (i + 1));
-      if (email === "" || email === null) {
-        email = "(no email)";
-      }
+      var cellName = document.createElement("td");
+      cellName.textContent = contacts[i];
+      row.appendChild(cellName);
 
-      var phone = prompt("Enter the phone number for contact #" + (i + 1));
-      if (phone === "" || phone === null) {
-        phone = "(no phone)";
-      }
-
-      names[i] = name;
-      emails[i] = email;
-      phones[i] = phone;
+      tableBody.appendChild(row);
 
       i = i + 1;
     }
 
-    // Display contacts in the table
-    var tableBody = document.getElementById("contactRows");
+    // Button click handler (no user-defined functions allowed)
+    document.getElementById("lookupBtn").onclick = function() {
 
-    var index = 0;
-    while (index < names.length) {
+      var keepGoing = true;
 
-      var row = document.createElement("tr");
+      while (keepGoing === true) {
 
-      var cellNumber = document.createElement("td");
-      cellNumber.textContent = index + 1;
-      row.appendChild(cellNumber);
+        var slotText = prompt("Enter the slot number you want to view (0 to " + (contacts.length - 1) + "):");
 
-      var cellName = document.createElement("td");
-      cellName.textContent = names[index];
-      row.appendChild(cellName);
+        if (slotText === null) {
+          alert("Canceled.");
+          return;
+        }
 
-      var cellEmail = document.createElement("td");
-      cellEmail.textContent = emails[index];
-      row.appendChild(cellEmail);
+        var slot = parseInt(slotText);
 
-      var cellPhone = document.createElement("td");
-      cellPhone.textContent = phones[index];
-      row.appendChild(cellPhone);
+        if (isNaN(slot) || slot < 0 || slot >= contacts.length) {
+          alert("That slot does not exist. Please try again.");
+        } else {
+          var name = contacts[slot];
+          alert("You selected " + name + ".");
+        }
 
-      tableBody.appendChild(row);
+        var again = prompt("Would you like to search for another name? (yes or no)");
 
-      index = index + 1;
-    }
-
-    alert("Contacts added: " + names.length);
-  }
-</script>
+        if (again === null) {
+          keepGoing = false;
+        } else {
+          again = again.toLowerCase();
+          if (again !== "yes") {
+            keepGoing = false;
+          }
+        }
+      }
+    };
+  </script>
 
 </body>
 </html>
